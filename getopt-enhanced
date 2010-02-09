@@ -1,0 +1,156 @@
+#!/usr/bin/python
+
+#/***************************************************************************
+# *   Copyright (C) 2009, 2010 by Gavin Beatty                              *
+# *   gavinbeatty@gmail.com                                                 *
+# *                                                                         *
+# *   This program is free software; you can redistribute it and/or modify  *
+# *   it under the terms of the GNU General Public License as published by  *
+# *   the Free Software Foundation; either version 2 of the License, or     *
+# *   (at your option) any later version.                                   *
+# *                                                                         *
+# *   This program is distributed in the hope that it will be useful,       *
+# *   but WITHOUT ANY WARRANTY; without even the implied warranty of        *
+# *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the         *
+# *   GNU General Public License for more details.                          *
+# *                                                                         *
+# *   You should have received a copy of the GNU General Public License     *
+# *   along with this program; if not, write to the                         *
+# *   Free Software Foundation, Inc.,                                       *
+# *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
+# ***************************************************************************/
+
+"""An implementation of getopt (enhanced) written in python.
+
+We use the getopt module and pipes.quote meaning we are very portable.
+"""
+
+import sys
+import os
+import os.path
+import getopt
+import subprocess
+import pipes
+
+class Opts(object):
+    def __init__(self):
+        self.version = "1.1"
+        self.short_opts = ""
+        self.long_opts = []
+        self.getopt_func = getopt.gnu_getopt
+        self.prog_name = "getopt"
+        self.__arg_opts = None
+    def arg_opts(self):
+        if self.__arg_opts is None:
+            self.__arg_opts = []
+            lastc = None
+            for c in self.short_opts:
+                if c == ":":
+                    if lastc is None:
+                        error_internal(None)
+                    self.__arg_opts.append("-" + lastc)
+                lastc = c
+            for o in self.long_opts:
+                if o.endswith("="):
+                    self.__arg_opts.append("--" + o[:-1])
+        return self.__arg_opts
+
+def help_print():
+    print "Usage: getopt-enhanced.py [OPTIONS] [-- ARGUMENTS]"
+
+def license_print():
+    print "GPLv2+"
+
+def version_print():
+    print g_options.version
+
+def error_getopt(err):
+    sys.exit(err)
+
+def error_unknownOpt(o):
+    sys.exit("Unknown option `%s'" % o)
+
+def error_internal(msg):
+    sys.exit("Internal error! Details: %s" % msg)
+
+def error_user_getopt(msg):
+    sys.exit("%s: %s" % (g_options.prog_name, msg))
+
+def sq__(one):
+    if one == '':
+        return "''"
+    return pipes.quote(one)
+
+def sq(*args):
+    return " ".join([sq__(x) for x in args])
+
+def main(argv=None):
+    """The script itself really
+
+    Pass in a list of arguments including the progname for testing.
+
+    Returns a suitable exit status
+    """
+    if sys.version < '2.4':
+        print >>sys.stderr, "Python >= 2.4 required."
+        return 1
+    if argv is None:
+        argv = sys.argv
+
+    global g_options
+    g_options = Opts()
+
+    try:
+        opts, args = getopt.gnu_getopt(argv[1:], \
+                         "To:l:n:h", \
+                         ["options=", "long=", "name=", "help", "version", "license"])
+    except getopt.GetoptError, err:
+        error_getopt(str(err))
+
+    for o, a in opts:
+        if o in ("-h", "--help"):
+            help_print()
+            sys.exit(0)
+        elif o == "--version":
+            version_print()
+            sys.exit(0)
+        elif o == "--license":
+            license_print()
+            sys.exit(0)
+        elif o in ("-o", "--options"):
+            if a.startswith("+"):
+                g_options.getopt_func = getopt.getopt
+                g_options.short_opts = a[1:]
+            else:
+                g_options.short_opts = a
+        elif o in ("-l", "--long"):
+            g_options.long_opts = a.replace(":", "=").split(",")
+        elif o in ("-n", "--name"):
+            g_options.prog_name = a
+        elif o == "-T":
+            sys.exit(4)
+        else:
+            error_unknownOpt(o)
+
+    # main()
+    try:
+        subopts, subargs = g_options.getopt_func(args, \
+                         g_options.short_opts, g_options.long_opts)
+    except getopt.GetoptError, err:
+        sys.exit(str(err))
+
+    for subo, suba in subopts:
+        if subo in g_options.arg_opts():
+            sys.stdout.write(" %s %s" % (subo, sq(suba)))
+        else:
+            sys.stdout.write(" %s" % subo)
+    sys.stdout.write(" --")
+    for suba in subargs:
+        sys.stdout.write(" %s" % sq(suba))
+    sys.stdout.write("\n")
+
+    return 0
+
+if __name__ == "__main__":
+    sys.exit(main())
+
