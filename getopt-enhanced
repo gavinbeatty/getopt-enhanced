@@ -36,24 +36,9 @@ class Opts(object):
     def __init__(self):
         self.version = "1.1"
         self.short_opts = ""
-        self.long_opts = []
+        self.long_opts = ""
         self.getopt_func = getopt.gnu_getopt
         self.prog_name = "getopt"
-        self.__arg_opts = None
-    def arg_opts(self):
-        if self.__arg_opts is None:
-            self.__arg_opts = []
-            lastc = None
-            for c in self.short_opts:
-                if c == ":":
-                    if lastc is None:
-                        error_internal(None)
-                    self.__arg_opts.append("-" + lastc)
-                lastc = c
-            for o in self.long_opts:
-                if o.endswith("="):
-                    self.__arg_opts.append("--" + o[:-1])
-        return self.__arg_opts
 
 def help_print():
     print "Usage: getopt-enhanced.py [OPTIONS] [-- ARGUMENTS]"
@@ -67,7 +52,7 @@ def version_print():
 def error_getopt(err):
     sys.exit(err)
 
-def error_unknownOpt(o):
+def error_unknown_opt(o):
     sys.exit("Unknown option `%s'" % o)
 
 def error_internal(msg):
@@ -84,7 +69,57 @@ def sq__(one):
 def sq(*args):
     return " ".join([sq__(x) for x in args])
 
-def main(argv=None):
+def arg_opts(short_opts, long_opts):
+    result = []
+    lastc = None
+    for c in short_opts:
+        if c == ":":
+            if lastc is None:
+                error_internal(None)
+            result.append("-" + lastc)
+        lastc = c
+    for o in long_opts:
+        if o.endswith("="):
+            result.append("--" + o[:-1])
+    return result
+
+def parse_args(short_opts, long_opts, args, getopt_func=getopt.gnu_getopt):
+    # don't catch the getopt.GetoptError exception
+    subopts, subargs = getopt_func(args, short_opts, long_opts)
+    return (subopts, subargs)
+
+def print_opts_args(opts, args, optlist, fobj=sys.stdout):
+    for subo, suba in opts:
+        if subo in optlist:
+            fobj.write(" %s %s" % (subo, sq(suba)))
+        else:
+            fobj.write(" %s" % subo)
+    fobj.write(" --")
+    for suba in args:
+        fobj.write(" %s" % sq(suba))
+    fobj.write("\n")
+
+def getopt_enhanced(short_options="", long_options="", name=None
+, args=None, fobj=sys.stdout):
+
+    getopt_func = getopt.gnu_getopt
+    if short_options.startswith("+"):
+        getopt_func = getopt.getopt
+        short_options = short_options[1:]
+    long_options = long_options.replace(":", "=").split(",")
+    if name is None:
+        name = "getopt"
+    if args is None:
+        args = []
+
+    popts, pargs = parse_args(short_options, long_options, args
+        , getopt_func=getopt_func)
+
+    print_opts_args(popts, pargs
+        , arg_opts(short_options, long_options)
+        , fobj=fobj)
+
+def main(argv=None, fobj=sys.stdout):
     """The script itself really
 
     Pass in a list of arguments including the progname for testing.
@@ -118,36 +153,18 @@ def main(argv=None):
             license_print()
             sys.exit(0)
         elif o in ("-o", "--options"):
-            if a.startswith("+"):
-                g_options.getopt_func = getopt.getopt
-                g_options.short_opts = a[1:]
-            else:
-                g_options.short_opts = a
+            g_options.short_opts = a
         elif o in ("-l", "--long"):
-            g_options.long_opts = a.replace(":", "=").split(",")
+            g_options.long_opts = a
         elif o in ("-n", "--name"):
             g_options.prog_name = a
         elif o == "-T":
             sys.exit(4)
         else:
-            error_unknownOpt(o)
+            error_unknown_opt(o)
 
-    # main()
-    try:
-        subopts, subargs = g_options.getopt_func(args, \
-                         g_options.short_opts, g_options.long_opts)
-    except getopt.GetoptError, err:
-        sys.exit(str(err))
-
-    for subo, suba in subopts:
-        if subo in g_options.arg_opts():
-            sys.stdout.write(" %s %s" % (subo, sq(suba)))
-        else:
-            sys.stdout.write(" %s" % subo)
-    sys.stdout.write(" --")
-    for suba in subargs:
-        sys.stdout.write(" %s" % sq(suba))
-    sys.stdout.write("\n")
+    return getopt_enhanced(g_options.short_opts, g_options.long_opts \
+        , g_options.prog_name, args)
 
     return 0
 
