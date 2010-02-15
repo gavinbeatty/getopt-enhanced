@@ -6,6 +6,7 @@ We use the getopt module and pipes.quote meaning we are very portable.
 """
 
 from distutils.core import setup
+import test
 
 
 # A list of classifiers can be found here:
@@ -50,6 +51,7 @@ setup(name='getopt-enhanced',
       classifiers=filter(None, classifiers.split("\n")),
       url='http://code.google.com/p/getopt-enhanced/',
       version='1.1',
-      scripts=['getopt-enhanced']
+      scripts=['getopt-enhanced'],
+      cmdclass={'test': test.TestCommand}
       )
 

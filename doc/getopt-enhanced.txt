@@ -1,0 +1,64 @@
+GETOPT-ENHANCED(1)                                          GETOPT-ENHANCED(1)
+
+
+
+NAME
+       getopt-enhanced - an implementation of getopt (enhanced) in python
+
+SYNOPSIS
+       getopt-enhanced [OPTIONS] [-- <arguments>...]
+
+       getopt-enhanced -T
+
+DESCRIPTION
+       We use the getopt module and pipes.quote meaning we are very portable.
+
+OPTIONS
+       -o, --options=<short_options>
+           The list of short options. e.g., "hvo:"
+
+       -l, --long=<long_options>
+           The list of long options. e.g., "help,version,output:"
+
+       -n, --name=<name>
+           When printing an error, use <name> as the name of the program.
+
+       -T
+           Return immediately with exit status 4. This is the standard getopt
+           (enhanced) test.
+
+       -h, --help
+           Print some usage information.
+
+       --version
+           Print the version number.
+
+       --license
+           Print some license information.
+
+       <arguments>
+           The argument list you would like getopt to parse.
+
+EXIT STATUS
+       0 on success and non-zero on failure.
+
+AUTHOR
+       Gavin Beatty <gavinbeatty@gmail.com>
+
+RESOURCES
+       Website: http://code.google.com/p/getopt-enhanced/
+
+REPORTING BUGS
+       Please report all bugs and wishes to <gavinbeatty@gmail.com>
+
+COPYING
+       getopt-enhanced Copyright (C) 2009, 2010 Gavin Beatty,
+       <gavinbeatty@gmail.com>
+
+       Free use of this software is granted under the terms of the GNU General
+       Public License version 3, or at your option, any later version.
+       (GPLv3+)
+
+
+
+getopt-enhanced 1.2               02/15/2010                GETOPT-ENHANCED(1)
