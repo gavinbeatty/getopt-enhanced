@@ -2,8 +2,9 @@ getopt-enhanced
 ===============
 Gavin Beatty <gavinbeatty@gmail.com>
 
-getopt-enhanced: an implementation of getopt (enhanced) written in python. We
-use the getopt module and pipes.quote meaning we are very portable.
+getopt-enhanced: an implementation of the getopt (enhanced) utility written
+using python's getopt module. Meant to be used as an easy-to-install fallback
+if the system getopt is not good enough. Passes the GNU getopt -T test.
 
     Usage: getopt-enhanced.py [OPTIONS] [-- ARGUMENTS]
 
@@ -12,13 +13,11 @@ For more usage details, see the manual.
 
 Dependencies
 ------------
-
-Everything is written using only fully cross-platform python.
+Python with getopt module.
 
 
 License
 -------
-
 getopt-enhanced Copyright 2009, 2010 Gavin Beatty <gavinbeatty@gmail.com>.
 
 This program is free software: you can redistribute it and/or modify
@@ -37,7 +36,6 @@ http://www.gnu.org/licenses/
 
 Install
 -------
-
 Use setuptools in the usual way:
     sudo python setup.py install
 
@@ -50,18 +48,13 @@ For additional help:
 
 Install documentation
 ---------------------
-
 Default installation prefix is /usr/local
-
     sudo make install-docs
 
 Install to your own prefix:
-
-    make install-docs prefix=~/.local
+    make install-docs PREFIX=~/.local
 
 
 Website
 -------
 http://code.google.com/p/getopt-enhanced/
-
-
