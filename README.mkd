@@ -13,11 +13,13 @@ For more usage details, see the manual.
 
 Dependencies
 ------------
+
 Python with getopt module.
 
 
 License
 -------
+
 getopt-enhanced Copyright 2009, 2010 Gavin Beatty <gavinbeatty@gmail.com>.
 
 This program is free software: you can redistribute it and/or modify
@@ -36,25 +38,33 @@ http://www.gnu.org/licenses/
 
 Install
 -------
+
 Use setuptools in the usual way:
+
     sudo python setup.py install
 
 To install only for the current user:
+
     python setup.py install --user
 
 For additional help:
+
     python setup.py --help
 
 
 Install documentation
 ---------------------
-Default installation prefix is /usr/local
+
+Default installation prefix is `/usr/local`:
+
     sudo make install-docs
 
 Install to your own prefix:
+
     make install-docs PREFIX=~/.local
 
 
 Website
 -------
-http://code.google.com/p/getopt-enhanced/
+
+https://github.com/gavinbeatty/getopt-enhanced

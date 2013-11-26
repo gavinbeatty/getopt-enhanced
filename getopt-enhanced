@@ -1,7 +1,7 @@
 #!/usr/bin/python
-
+# vi: set ft=python shiftwidth=4 tabstop=4:
 #/***************************************************************************
-# *   Copyright (C) 2009, 2010 by Gavin Beatty                              *
+# *   Copyright (C) 2009, 2010, 2012 by Gavin Beatty                        *
 # *   gavinbeatty@gmail.com                                                 *
 # *                                                                         *
 # *   This program is free software; you can redistribute it and/or modify  *
@@ -20,9 +20,9 @@
 # *   59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
 # ***************************************************************************/
 
-"""An implementation of getopt (enhanced) written in python.
+"""Command-line getopt (enhanced) written in python.
 
-We use the getopt module and pipes.quote meaning we are very portable.
+Uses the getopt module and pipes.quote meaning it's very portable.
 """
 
 import sys
@@ -40,7 +40,7 @@ class Opts(object):
         self.prog_name = None
 
 def help_print():
-    print "Usage: getopt-enhanced.py [OPTIONS] [-- ARGUMENTS]"
+    print "usage: getopt-enhanced.py [OPTIONS] [-- ARGUMENTS]"
 
 def license_print():
     print "GPLv2+"

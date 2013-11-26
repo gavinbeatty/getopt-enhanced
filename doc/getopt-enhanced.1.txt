@@ -1,8 +1,5 @@
 GETOPT-ENHANCED(1)
 ==================
-:man source: getopt-enhanced
-:man version: 1.1
-
 
 NAME
 -----
@@ -61,7 +58,7 @@ Gavin Beatty <gavinbeatty@gmail.com>
 
 RESOURCES
 ---------
-Website: <http://code.google.com/p/getopt-enhanced/>
+Website: <https://github.com/gavinbeatty/getopt-enhanced>
 
 
 REPORTING BUGS
@@ -75,5 +72,3 @@ getopt-enhanced Copyright \(C) 2009, 2010 Gavin Beatty, <gavinbeatty@gmail.com>
 
 Free use of this software is granted under the terms of the GNU General Public
 License version 3, or at your option, any later version. (GPLv3+)
-
-
